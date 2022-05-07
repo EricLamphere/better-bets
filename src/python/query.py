@@ -40,7 +40,7 @@ class Query:
 
 
 if __name__=="__main__":
-  # env vars
+  # env vars stored in ~/.env
   load_dotenv(dotenv_path = os.path.join(os.getenv("HOME"), ".env"))
   # os.getenv("RAPID_API_TOKEN")
   
