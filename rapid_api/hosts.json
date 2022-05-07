@@ -1,0 +1,6 @@
+{
+  "FOOTBALL_PREDICTION": {
+    "host": "football-prediction-api.p.rapidapi.com",
+    "url": "https://football-prediction-api.p.rapidapi.com/api/v2/predictions"
+  }
+}
