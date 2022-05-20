@@ -6,21 +6,25 @@ from dotenv import load_dotenv
 from pathlib import Path
 import pandas as pd
 
+# pw = Query.name
+# pw2 = Query().name
+
 
 class Query:
+  name = "Eric is cool"
   def __init__(self, api, params):
     self.api = api.replace("-", "_").upper()
     self.params = params
     self.token = os.getenv("RAPID_API_TOKEN")
   
-  
+  @staticmethod
   def get_api_info(self):
     hosts = json.load(open("./rapid_api/hosts.json"))
     host = hosts[self.api]
     return host
   
-  
-  def query(self, params):
+  @classmethod
+  def query(cls, params):
     host = self.get_api_info()
     
     headers = {
