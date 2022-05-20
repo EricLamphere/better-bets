@@ -19,7 +19,7 @@ class Query:
   
   @staticmethod
   def get_api_info(self):
-    hosts = json.load(open("./rapid_api/hosts.json"))
+    hosts = json.load(open("./src/rapid_api/hosts.json"))
     host = hosts[self.api]
     return host
   
