@@ -6,25 +6,26 @@ from dotenv import load_dotenv
 from pathlib import Path
 import pandas as pd
 
-# pw = Query.name
-# pw2 = Query().name
-
 
 class Query:
-  name = "Eric is cool"
-  def __init__(self, api, params):
+  # name = "Eric" # os.getenv("HOST")
+  def __init__(self, api):
     self.api = api.replace("-", "_").upper()
-    self.params = params
     self.token = os.getenv("RAPID_API_TOKEN")
   
-  @staticmethod
+  # @staticmethod
   def get_api_info(self):
     hosts = json.load(open("./src/rapid_api/hosts.json"))
     host = hosts[self.api]
     return host
   
-  @classmethod
-  def query(cls, params):
+  @staticmethod
+  def resp_to_df(resp, data_path = ['data']):
+    resp_df = pd.json_normalize(resp.json(), record_path = data_path)
+    return resp_df
+  
+  
+  def query(self, params):
     host = self.get_api_info()
     
     headers = {
@@ -38,8 +39,11 @@ class Query:
       headers = headers, 
       params = params
     )
-    resp_df = pd.json_normalize(resp.json(), record_path = ['data'])
+    resp_df = self.resp_to_df(resp)
     return resp_df
+
+
+
 
 
 
@@ -52,14 +56,13 @@ if __name__=="__main__":
   api = "football-prediction"
   params = {
     "market":"classic",
-    "iso_date":"2018-12-01",
+    "iso_date":"2022-05-21",
     "federation":"UEFA"
   }
   
   # execute
-  q = Query(api, params)
-  q.query(params=params)
-
+  q = Query(api)
+  res = q.query(params=params)
   print(res.head())
 
 
