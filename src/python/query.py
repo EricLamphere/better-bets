@@ -1,57 +1,48 @@
 # imports
 import requests
-import json
-import os
-from dotenv import load_dotenv
-from pathlib import Path
 import pandas as pd
+from auth import Auth
 
 
-class Query:
-  # name = "Eric" # os.getenv("HOST")
-  def __init__(self, api):
-    self.api = api.replace("-", "_").upper()
-    self.token = os.getenv("RAPID_API_TOKEN")
-  
-  # @staticmethod
-  def get_api_info(self):
-    hosts = json.load(open("./src/rapid_api/hosts.json"))
-    host = hosts[self.api]
-    return host
-  
-  @staticmethod
-  def resp_to_df(resp, data_path = ['data']):
-    resp_df = pd.json_normalize(resp.json(), record_path = data_path)
-    return resp_df
-  
-  
-  def query(self, params):
-    host = self.get_api_info()
-    
-    headers = {
+class Query(Auth):
+
+  def run(self, params: dict, headers: dict = {}):
+    host = self.HOST
+
+    base_headers = {
       "X-RapidAPI-Host": host['host'],
-      "X-RapidAPI-Key": self.token
+      "X-RapidAPI-Key": self.TOKEN
     }
-    
+    headers = {**base_headers, **headers}
+
+    print("Running query...")
     resp = requests.request(
       "GET", 
-      host.get("url"), 
+      host["url"], 
       headers = headers, 
       params = params
     )
-    resp_df = self.resp_to_df(resp)
-    return resp_df
+    print("Query complete!")
+    return self.parse_response(resp)
 
 
+  @staticmethod
+  def parse_response(resp, data_path = ['data']):
+    try:
+      return pd.json_normalize(resp.json(), record_path = data_path)
+    except:
+      print("failed to parse query, returning raw json response")
+      return resp
 
 
-
-
-if __name__=="__main__":
-  # env vars stored in ~/.env
-  load_dotenv(dotenv_path = os.path.join(os.getenv("HOME"), ".env"))
-  # os.getenv("RAPID_API_TOKEN")
+if __name__ == "__main__":
+  from dotenv import load_dotenv # pip install python-dotenv
+  import os
   
+  # env vars like rapid API token stored in ~/.env
+  dotenv_path = os.path.join(os.getenv("HOME"), ".env")
+  load_dotenv(dotenv_path = dotenv_path)
+
   # params
   api = "football-prediction"
   params = {
@@ -59,11 +50,11 @@ if __name__=="__main__":
     "iso_date":"2022-05-21",
     "federation":"UEFA"
   }
-  
+
   # execute
   q = Query(api)
-  res = q.query(params=params)
-  print(res.head())
+  res = q.run(params=params)
+  print(res)
 
 
 
