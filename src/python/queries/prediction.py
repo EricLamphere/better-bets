@@ -1,3 +1,6 @@
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from query import Query
 from utils.dates import server_to_local_datetime
 from utils.math import prob_from_odds
@@ -90,8 +93,10 @@ def _prediction_enum(prediction, home = None, away = None):
 
 
 if __name__ == "__main__":
+    from utils.env import load_env
+    
+    load_env()
     res = match_prediction("2023-08-12", "Arsenal")
-    print(res)
 
 
 

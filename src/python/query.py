@@ -24,14 +24,14 @@ class Query(Auth):
     @staticmethod
     def _validate_response(response):
         if response.ok:
-          return response
+            return response
         else:
-          raise Exception(
-            f"""
-            Bad response from server, status-code: {response.status_code}
-            {response.content}
-            """
-          )
+            raise Exception(
+              f"""
+              Bad response from server, status-code: {response.status_code}
+              {response.content}
+              """
+            )
 
 
     @staticmethod
