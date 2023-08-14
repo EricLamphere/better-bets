@@ -43,13 +43,9 @@ class Query(Auth):
 
 
 if __name__ == "__main__":
-    from dotenv import load_dotenv # pip install python-dotenv
-    import os
-
-    # env vars like rapid API token stored in ~/.env
-    dotenv_path = os.path.join(os.getenv("HOME"), ".env")
-    load_dotenv(dotenv_path = dotenv_path)
-
+    from utils.env import load_env # pip install python-dotenv
+    load_env()
+    
     # params
     api = "football-prediction"
     params = {
